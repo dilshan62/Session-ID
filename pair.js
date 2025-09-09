@@ -82,7 +82,20 @@ router.get("/", async (req, res) => {
             );
 
             const sid = string_session;
+            await PrabathPairWeb.sendMessage(user_jid, {
+  image: { url: "https://github.com/dilshan62/DILSHAN-MD/blob/main/images/bot_connected.png?raw=true" }, // replace with your branding banner
+  caption: `╭━━━❰ 🔐 *SESSION CONNECTED*
+┃🔰 *WELCOME TO DILSHAN-MD* 🔰
+┃───────────────────────
+┃ 🪪 *Status:* Successfully Paired
+┃ 📱 *Bot:* DILSHAN-MD WhatsApp Bot
+┃
+┃ ⚡ Powered by: *Dilshan Chanushka*
+╰━━━━━━━━━━━━━━━━━━━━━━━╯
 
+✅ Your session is now active. 
+⚠️ Please do not share your Session ID with anyone!`
+});
             const dt = await PrabathPairWeb.sendMessage(user_jid, {
               text: sid,
             });
