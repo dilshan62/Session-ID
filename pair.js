@@ -95,15 +95,18 @@ router.get("/", async (req, res) => {
 ✅ Your session is now active. 
 ⚠️ Please do not share your Session ID with anyone!`
 });
-            const dt = await PrabathPairWeb.sendMessage(user_jid, {
-              text: sid,
-            });
+            await PrabathPairWeb.sendMessage(user_jid, { text: sid });
+
+            setTimeout(() => {
+              removeFile("./session");
+              console.log("Session sent, shutting down...");
+              process.exit(0);
+            }, 2000); // give 2s to finish sending
           } catch (e) {
             exec("pm2 restart prabath");
           }
 
-          await delay(2000);
-          PrabathPairWeb.end();
+          await delay(100);
           return await removeFile("./session");
           process.exit(0);
         } else if (
