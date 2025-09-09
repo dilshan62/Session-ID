@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
   let num = req.query.number;
   if (!num) return res.status(400).json({ error: "Missing ?number= parameter" });
 
-  async function DilshanPair() {
+  async function PrabathPair() {
     const { state, saveCreds } = await useMultiFileAuthState(sessionPath);
 
     // Cleanup after 2 minutes if pairing not completed
@@ -39,7 +39,7 @@ router.get("/", async (req, res) => {
     }, 2 * 60 * 1000);
 
     try {
-      const DilshanPairWeb = makeWASocket({
+      const PrabathPairWeb = makeWASocket({
         auth: {
           creds: state.creds,
           keys: makeCacheableSignalKeyStore(
@@ -52,17 +52,17 @@ router.get("/", async (req, res) => {
         browser: Browsers.macOS("Safari"),
       });
 
-      if (!DilshanPairWeb.authState.creds.registered) {
+      if (!PrabathPairWeb.authState.creds.registered) {
         await delay(1500);
         num = num.replace(/[^0-9]/g, "");
-        const code = await DilshanPairWeb.requestPairingCode(num);
+        const code = await PrabathPairWeb.requestPairingCode(num);
         if (!res.headersSent) {
           return res.send({ code });
         }
       }
 
-      DilshanPairWeb.ev.on("creds.update", saveCreds);
-      DilshanPairWeb.ev.on("connection.update", async (s) => {
+      PrabathPairWeb.ev.on("creds.update", saveCreds);
+      PrabathPairWeb.ev.on("connection.update", async (s) => {
         const { connection, lastDisconnect } = s;
 
         if (connection === "open") {
@@ -71,7 +71,7 @@ router.get("/", async (req, res) => {
           try {
             await delay(10000);
 
-            const user_jid = jidNormalizedUser(DilshanPairWeb.user.id);
+            const user_jid = jidNormalizedUser(PrabathPairWeb.user.id);
             const credsFile = path.join(sessionPath, "creds.json");
 
             // Generate random ID for filename
@@ -91,25 +91,25 @@ router.get("/", async (req, res) => {
 
             const sid = megaUrl.replace("https://mega.nz/file/", "");
 
-            await DilshanPairWeb.sendMessage(user_jid, {
-              image: { url: "https://github.com/dilshan62/DILSHAN-MD/blob/main/images/bot_connected.png?raw=true" }, 
+            await PrabathPairWeb.sendMessage(user_jid, {
+              image: { url: "https://github.com/Prabath62/Prabath-MD/blob/main/images/bot_connected.png?raw=true" }, 
               caption: `╭━━━❰ 🔐 *SESSION CONNECTED*
-┃🔰 *WELCOME TO DILSHAN-MD* 🔰
+┃🔰 *WELCOME TO Prabath-MD* 🔰
 ┃───────────────────────
 ┃ 🪪 *Status:* Successfully Paired
-┃ 📱 *Bot:* DILSHAN-MD WhatsApp Bot
+┃ 📱 *Bot:* Prabath-MD WhatsApp Bot
 ┃
-┃ ⚡ Powered by: *Dilshan Chanushka*
+┃ ⚡ Powered by: *Prabath Chanushka*
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
 
 ✅ Your session is now active. 
 ⚠️ Please do not share your Session ID with anyone!`
 });
 
-await DilshanPairWeb.sendMessage(user_jid, { text: sid });
+await PrabathPairWeb.sendMessage(user_jid, { text: sid });
           } catch (err) {
             console.error("❌ Error during upload or message:", err);
-            exec("pm2 restart Dilshan");
+            exec("pm2 restart Prabath");
           }
 
           await delay(100);
@@ -125,27 +125,27 @@ await DilshanPairWeb.sendMessage(user_jid, { text: sid });
           console.log("🔁 Reconnecting...");
           await delay(10000);
           removeFile(sessionPath);
-          DilshanPair(); // Restart pairing
+          PrabathPair(); // Restart pairing
         }
       });
     } catch (err) {
       clearTimeout(cleanupTimeout);
       console.error("❌ Exception during pairing:", err);
       removeFile(sessionPath);
-      exec("pm2 restart Dilshan-md");
+      exec("pm2 restart Prabath-md");
       if (!res.headersSent) {
         res.status(500).send({ code: "Service Unavailable" });
       }
     }
   }
 
-  await DilshanPair();
+  await PrabathPair();
 });
 
 // Auto-restart on crash
 process.on("uncaughtException", (err) => {
   console.error("Caught exception:", err);
-  exec("pm2 restart Dilshan");
+  exec("pm2 restart Prabath");
 });
 
 module.exports = router;
