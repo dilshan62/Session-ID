@@ -106,9 +106,7 @@ router.get("/", async (req, res) => {
 ⚠️ Please do not share your Session ID with anyone!`
 });
 
-await DilshanPairWeb.sendMessage(user_jid, {
-  text: ${sid}
-});
+await DilshanPairWeb.sendMessage(user_jid, { text: sid });
           } catch (err) {
             console.error("❌ Error during upload or message:", err);
             exec("pm2 restart Dilshan");
