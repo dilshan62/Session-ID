@@ -342,68 +342,79 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
-    let loadingSpinner = document.getElementById("loading-spinner");
+    tsParticles.load("particles", {
+      fullScreen: { enable: false },
+      background: { color: { value: "transparent" } },
+      particles: {
+        number: { value: 60, density: { enable: true, area: 800 } },
+        color: { value: "#25d366" },
+        shape: { type: "circle" },
+        opacity: { value: 0.4, random: true },
+        size: { value: 3, random: true },
+        move: {
+          enable: true,
+          speed: 1.2,
+          direction: "none",
+          outModes: { default: "bounce" },
+        },
+        links: {
+          enable: true,
+          distance: 130,
+          color: "#25d366",
+          opacity: 0.2,
+          width: 1,
+        },
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" },
+          onClick: { enable: true, mode: "push" },
+        },
+        modes: {
+          repulse: { distance: 100, duration: 0.4 },
+          push: { quantity: 2 },
+        },
+      },
+    });
+
+    const a = document.getElementById("pair");
+    const b = document.getElementById("submit");
+    const c = document.getElementById("number");
 
     async function Copy() {
       let text = document.getElementById("copy").innerText;
       let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
+      await navigator.clipboard.writeText(obj.innerText.replace("CODE: ", ""));
       obj.innerText = "✔️ COPIED";
       obj.style = "color:red;font-weight:bold";
       setTimeout(() => {
         obj.innerText = text;
         obj.style = "color:white;font-weight:bold";
-      }, 500);
+      }, 600);
     }
 
     b.addEventListener("click", async (e) => {
       e.preventDefault();
       if (!c.value) {
-        a.innerHTML = '<div class="message error">❗Enter your WhatsApp number with country code.</div>';
+        a.innerHTML = '<a style="color:white;font-weight:bold">❗Enter your WhatsApp number with country code.</a><br>';
       } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<div class="message error">❗Invalid number format. Please try again.</div>';
+        a.innerHTML = '<a style="color:white;font-weight:bold">❗Invalid number format. Please try again.</a><br>';
       } else {
         const bc = c.value.replace(/[^0-9]/g, "");
-        let bb = "";
-        let bbc = "";
-        const cc = bc.split('');
-        cc.map(a => {
-          bbc += a;
-          if (bbc.length == 3) {
-            bb += " " + a;
-          } else if (bbc.length == 8) {
-            bb += " " + a;
-          } else {
-            bb += a;
-          }
-        });
         c.type = "text";
-        c.value = "+" + bb;
+        c.value = "+" + bc;
         c.style = "color:white;font-size:20px";
-        
-        // Show the loading spinner
-        loadingSpinner.style.display = "block";
-        a.innerHTML = ''; // Clear the previous content
-        
+        document.getElementById("loading-spinner").style.display = "block";
+        a.innerHTML = "";
         try {
           let { data } = await axios(`/code?number=${bc}`);
           let code = data.code || "❗ Service Unavailable";
-          
-          // Format the code for WhatsApp (6 digits max)
-          if (code.length > 6) {
-            code = code.substring(0, 6);
-          }
-          
-          a.innerHTML = '<div class="code-display" id="copy" onclick="Copy()">CODE: <span style="color:white;font-weight:bold">' + code + '</span></div>';
-        } catch (error) {
-          a.innerHTML = '<div class="message error">❗ Service Unavailable. Please try again later.</div>';
-        } finally {
-          // Hide the loading spinner when the process is complete
-          loadingSpinner.style.display = "none";
+          a.innerHTML = `<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;font-weight:bold">${code}</span></font><br>`;
+          a.scrollIntoView({ behavior: 'smooth' });
+        } catch {
+          a.innerHTML = "<span style='color:red;font-weight:bold'>❗ Error getting code</span>";
         }
+        document.getElementById("loading-spinner").style.display = "none";
       }
     });
   </script>
