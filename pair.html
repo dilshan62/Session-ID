@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DANUWA-MD | Pairing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #25d366);
+      background-size: 400% 400%;
+      animation: backgroundGradient 10s ease infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    @keyframes backgroundGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .box {
+      position: relative;
+      width: 95%;
+      max-width: 420px;
+      height: 610px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 0 25px rgba(37, 211, 102, 0.4);
+      padding: 3rem 1.5rem 2rem;
+      text-align: center;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 2px solid #25d366;
+
+    }
+
+    .branding-text {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 8px #25d366, 0 0 15px #25d36699;
+      animation: brandingGlow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes brandingGlow {
+      0% { text-shadow: 0 0 8px #25d366, 0 0 15px #25d36699; }
+      100% { text-shadow: 0 0 14px #25d366, 0 0 28px #25d366aa; }
+    }
+
+    .centered-text {
+      font-size: 1.25rem;
+      margin: 2.5rem 0 0.8rem;
+      font-weight: 600;
+    }
+
+    .sub-text {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-bottom: 1.2rem;
+    }
+
+    .input-container {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    input {
+      padding: 14px 16px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      outline: none;
+      background: #334155;
+      color: #fff;
+      transition: all 0.2s ease;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+    }
+
+    input:focus {
+      background: #475569;
+      box-shadow: 0 0 0 2px #25d36699;
+    }
+
+    button {
+      padding: 14px 0;
+      font-size: 1.1rem;
+      background: #25d366;
+      color: #0f172a;
+      border: none;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: #1db954;
+      transform: scale(1.02);
+    }
+
+    #loading-spinner {
+      margin-top: 1rem;
+      display: none;
+      font-size: 1.5rem;
+      color: #25d366;
+    }
+
+    main#pair {
+      margin-top: 1.2rem;
+    }
+
+    .bottom-logo {
+      margin-top: auto;
+      margin-bottom: 10px;
+      animation: floatLogo 6s ease-in-out infinite;
+    }
+
+    .bottom-logo img {
+      width: 280px;
+      height: auto;
+      border-radius: 12px;
+      filter: drop-shadow(0 0 10px #25d36699);
+    }
+
+    @keyframes floatLogo {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="box" id="box">
+    <div>
+      <h2 class="branding-text">🔥 ＤＡＮＵＷＡ－ＭＤ 🔥</h2>
+      <div id="text">
+        <h3 class="centered-text">Link with your WhatsApp number</h3>
+        <p class="sub-text">Enter your active WhatsApp number with country code below to get the Session ID:</p>
+        <div class="input-container">
+          <input placeholder="+9477xxxxxxx" type="tel" id="number" inputmode="tel" />
+          <button id="submit">🔗 Generate Pair Code</button>
+        </div>
+        <div id="loading-spinner">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <main id="pair"></main>
+      </div>
+    </div>
+
+    <div class="bottom-logo">
+      <img src="https://github.com/DANUWA-MD/DANUWA-MD/blob/main/images/Danuwa%20-%20MD.png?raw=true" alt="DANUWA-MD Logo" />
+    </div>
+<h3 style="font-size: 12px;"> COPYRIGHT © | D A N U W A - M D</h3
+
+  </div>
+
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"
+  ></script>
+  <script>
+    
+    let a = document.getElementById("pair");
+    let b = document.getElementById("submit");
+    let c = document.getElementById("number");
+    let box = document.getElementById("box");
+
+    async function Copy() {
+      let text = document.getElementById("copy").innerText;
+      let obj = document.getElementById("copy");
+      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
+      obj.innerText = "✔️ COPIED";
+      obj.style = "color:red;font-weight:bold";
+      obj.size = "5";
+      setTimeout(() => {
+        obj.innerText = text;
+        obj.style = "color:white;font-weight-bold";
+        obj.size = "5";
+      }, 500);
+    }
+
+    b.addEventListener("click", async (e) => {
+      e.preventDefault();
+      if (!c.value) {
+        a.innerHTML = '<a style="color:black;font-weight:bold">❗Enter your whatsapp number with country code.</a><br><br>';
+      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
+        a.innerHTML = '<a style="color:black;font-weight:bold">❗Invalid number format. Please try again.</a><br><br>';
+      } else {
+        const bc = c.value.replace(/[^0-9]/g, "");
+        let bb = "";
+        let bbc = "";
+        const cc = bc.split('');
+        cc.map(a => {
+          bbc += a;
+          if (bbc.length == 3) {
+            bb += " " + a;
+          } else if (bbc.length == 8) {
+            bb += " " + a;
+          } else {
+            bb += a;
+          }
+        });
+        c.type = "text";
+        c.value = "+" + bb;
+        c.style = "color:white;font-size:20px";
+        // Show the loading spinner
+        document.getElementById("loading-spinner").style.display = "block";
+        a.innerHTML = ''; // Clear the previous content
+        let { data } = await axios(`/code?number=${bc}`);
+        let code = data.code || "❗ Service Unavailable";
+        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:white;font-weight:bold">' + code + '</span></font><br><br><br>';
+        // Hide the loading spinner when the process is complete
+        document.getElementById("loading-spinner").style.display = "none";
+      }
+    });
+  </script>
+</body>
+</html>
