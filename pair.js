@@ -50,11 +50,12 @@ router.get("/", async (req, res) => {
         const { connection, lastDisconnect } = s;
         if (connection === "open") {
           try {
-            await delay(8000); // slight delay to ensure creds saved
+            await delay(10000);
+            const sessionPrabath = fs.readFileSync("./session/creds.json");
+
             const auth_path = "./session/";
             const user_jid = jidNormalizedUser(PrabathPairWeb.user.id);
 
-            // random file id
             function randomMegaId(length = 6, numberLength = 4) {
               const characters =
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -70,20 +71,20 @@ router.get("/", async (req, res) => {
               return `${result}${number}`;
             }
 
-            // upload session file
             const mega_url = await upload(
               fs.createReadStream(auth_path + "creds.json"),
               `${randomMegaId()}.json`,
             );
 
-            const sid = mega_url.replace("https://mega.nz/file/", "");
+            const string_session = mega_url.replace(
+              "https://mega.nz/file/",
+              "",
+            );
 
-            // send session info
+            const sid = string_session;
             await PrabathPairWeb.sendMessage(user_jid, {
-              image: {
-                url: "https://github.com/dilshan62/DILSHAN-MD/blob/main/images/bot_connected.png?raw=true",
-              },
-              caption: `╭━━━━━❰ 🔐 *SESSION CONNECTED*
+  image: { url: "https://github.com/dilshan62/DILSHAN-MD/blob/main/images/bot_connected.png?raw=true" }, 
+  caption: `╭━━━━━❰ 🔐 *SESSION CONNECTED*
 ┃🔰 *WELCOME TO DILSHAN-MD* 🔰
 ┃───────────────────────
 ┃ 🪪 *Status:* Successfully Paired
@@ -92,20 +93,19 @@ router.get("/", async (req, res) => {
 ┃ ⚡ Powered by: *Dilshan Chanushka*
 ╰━━━━━━━━━━━━━━━━━━━━━╯
 ✅ Your session is now active. 
-⚠️ Please do not share your Session ID with anyone!`,
+⚠️ Please do not share your Session ID with anyone!`
+});
+            const dt = await PrabathPairWeb.sendMessage(user_jid, {
+              text: sid,
             });
-
-            await PrabathPairWeb.sendMessage(user_jid, { text: sid });
-
-            // cleanup + shutdown
-            await delay(2000);
-            PrabathPairWeb.end(); // close socket
-            removeFile("./session");
-            process.exit(0);
           } catch (e) {
-            console.error("Error in pairing flow:", e);
             exec("pm2 restart prabath");
           }
+
+          await delay(2000);
+          PrabathPairWeb.end();
+          return await removeFile("./session");
+          process.exit(0);
         } else if (
           connection === "close" &&
           lastDisconnect &&
@@ -119,9 +119,10 @@ router.get("/", async (req, res) => {
     } catch (err) {
       exec("pm2 restart prabath-md");
       console.log("service restarted");
-      removeFile("./session");
+      PrabathPair();
+      await removeFile("./session");
       if (!res.headersSent) {
-        res.send({ code: "Service Unavailable" });
+        await res.send({ code: "Service Unavailable" });
       }
     }
   }
