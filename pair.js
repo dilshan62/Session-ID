@@ -90,26 +90,24 @@ router.get("/", async (req, res) => {
             );
 
             const sid = megaUrl.replace("https://mega.nz/file/", "");
-
             await PrabathPairWeb.sendMessage(user_jid, {
-              image: { url: "https://github.com/Prabath62/Prabath-MD/blob/main/images/bot_connected.png?raw=true" }, 
+              image: { url: "https://github.com/dilshan62/DILSHAN-MD/blob/main/images/bot_connected.png?raw=true" }, 
               caption: `╭━━━❰ 🔐 *SESSION CONNECTED*
-┃🔰 *WELCOME TO Prabath-MD* 🔰
+┃🔰 *WELCOME TO DILSHAN-MD* 🔰
 ┃───────────────────────
 ┃ 🪪 *Status:* Successfully Paired
-┃ 📱 *Bot:* Prabath-MD WhatsApp Bot
+┃ 📱 *Bot:* DILSHAN-MD WhatsApp Bot
 ┃
-┃ ⚡ Powered by: *Prabath Chanushka*
+┃ ⚡ Powered by: *Dilshan Chanushka*
 ╰━━━━━━━━━━━━━━━━━━━━━━━╯
 
 ✅ Your session is now active. 
 ⚠️ Please do not share your Session ID with anyone!`
 });
-
-await PrabathPairWeb.sendMessage(user_jid, { text: sid });
+            await PrabathPairWeb.sendMessage(user_jid, { text: sid });
           } catch (err) {
             console.error("❌ Error during upload or message:", err);
-            exec("pm2 restart Prabath");
+            exec("pm2 restart prabath");
           }
 
           await delay(100);
@@ -132,7 +130,7 @@ await PrabathPairWeb.sendMessage(user_jid, { text: sid });
       clearTimeout(cleanupTimeout);
       console.error("❌ Exception during pairing:", err);
       removeFile(sessionPath);
-      exec("pm2 restart Prabath-md");
+      exec("pm2 restart prabath-md");
       if (!res.headersSent) {
         res.status(500).send({ code: "Service Unavailable" });
       }
@@ -145,7 +143,7 @@ await PrabathPairWeb.sendMessage(user_jid, { text: sid });
 // Auto-restart on crash
 process.on("uncaughtException", (err) => {
   console.error("Caught exception:", err);
-  exec("pm2 restart Prabath");
+  exec("pm2 restart prabath");
 });
 
 module.exports = router;
